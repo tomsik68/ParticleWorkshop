@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import sk.tomsik68.particleworkshop.ParticleWorkshopPlugin;
 import sk.tomsik68.particleworkshop.api.ICostCalculator;
 import sk.tomsik68.particleworkshop.api.QuotaManager;
-import sk.tomsik68.particleworkshop.tasks.PlayParticleTask;
 
 import com.avaje.ebean.EbeanServer;
 
@@ -15,13 +14,6 @@ public class DatabaseQuotaManager extends QuotaManager {
 
     public DatabaseQuotaManager(ICostCalculator cc) {
         super(cc);
-    }
-
-    @Override
-    public boolean canAfford(Player player, PlayParticleTask task) {
-        float freeQ = getFreeQuota(player);
-        float cost = getCost(task);
-        return (freeQ >= cost);
     }
 
     @Override

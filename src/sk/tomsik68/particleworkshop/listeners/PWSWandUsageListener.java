@@ -21,6 +21,10 @@ import sk.tomsik68.particleworkshop.tasks.PlayParticleTask;
 public class PWSWandUsageListener implements Listener {
     public static final String WAND_METADATA_KEY = "pws.wand";
 
+    public PWSWandUsageListener() {
+        
+    }
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         PlayerWandData data = getWandData(event.getPlayer());
@@ -33,6 +37,7 @@ public class PWSWandUsageListener implements Listener {
             IParticlePlayer particle = data.getParticle();
 
             PlayParticleTask task = new PlayParticleTask(locations, particle, particleData, event.getPlayer().getUniqueId(), situation);
+            
             ParticlesManager.instance.addTask(task);
         }
     }

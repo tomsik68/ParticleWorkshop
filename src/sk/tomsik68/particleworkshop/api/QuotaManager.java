@@ -16,7 +16,11 @@ public abstract class QuotaManager {
         return calc.getCost(task);
     }
 
-    public abstract boolean canAfford(Player player, PlayParticleTask task);
+    public boolean canAfford(Player player, PlayParticleTask task) {
+        float freeQ = getFreeQuota(player);
+        float cost = getCost(task);
+        return (freeQ >= cost);
+    }
 
     public abstract float getFreeQuota(Player player);
 

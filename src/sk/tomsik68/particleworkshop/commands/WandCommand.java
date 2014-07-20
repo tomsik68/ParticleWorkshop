@@ -35,8 +35,12 @@ public class WandCommand extends CommandHandler {
     public void run(CommandSender sender, String[] args) throws Exception {
         if (args.length == 0) {
             Player player = (Player) sender;
-            player.removeMetadata(PWSWandUsageListener.WAND_METADATA_KEY, ParticleWorkshopPlugin.getInstance());
-            sender.sendMessage(ChatColor.GREEN + "[ParticleWorkshop] Your wand has been disabled.");
+            if (!player.hasMetadata(PWSWandUsageListener.WAND_METADATA_KEY)) {
+                sendHelp(sender);
+            } else {
+                player.removeMetadata(PWSWandUsageListener.WAND_METADATA_KEY, ParticleWorkshopPlugin.getInstance());
+                sender.sendMessage(ChatColor.GREEN + "[ParticleWorkshop] Your wand has been disabled.");
+            }
         } else {
             // activate wand using the player's current equipped item
             Player player = (Player) sender;
@@ -52,7 +56,8 @@ public class WandCommand extends CommandHandler {
 
                 parser.acceptsAll(Arrays.asList("r", "repeat"), "Plays the particle repeatedly");
                 parser.acceptsAll(Arrays.asList("f", "follow"), "Keeps following the clicked entity");
-                parser.acceptsAll(Arrays.asList("s", "situation"), "Plays particle only in special case").withRequiredArg().ofType(ParticlePlaySituations.class).defaultsTo(ParticlePlaySituations.ALWAYS);
+                parser.acceptsAll(Arrays.asList("s", "situation"), "Plays particle only in special case").withRequiredArg()
+                        .ofType(ParticlePlaySituations.class).defaultsTo(ParticlePlaySituations.ALWAYS);
                 parser.acceptsAll(Arrays.asList("d", "data"), "Effect data(integer)").withRequiredArg().ofType(Integer.class).defaultsTo(0);
 
                 OptionSet options = parser.parse(args);
@@ -60,8 +65,10 @@ public class WandCommand extends CommandHandler {
                 boolean repeat = options.has("r");
 
                 int relativeC = 0;
-                int[] relative = new int[] { 0, 0, 0 };
-                
+                int[] relative = new int[] {
+                        0, 0, 0
+                };
+
                 List<String> nonOptions = options.nonOptionArguments();
                 // parse relative coords
                 for (String s : nonOptions) {

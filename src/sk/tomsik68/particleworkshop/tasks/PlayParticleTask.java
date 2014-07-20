@@ -2,8 +2,8 @@ package sk.tomsik68.particleworkshop.tasks;
 
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
+
 import sk.tomsik68.particleworkshop.api.IParticlePlaySituation;
 import sk.tomsik68.particleworkshop.api.IParticlePlayer;
 import sk.tomsik68.particleworkshop.api.LocationIterator;
