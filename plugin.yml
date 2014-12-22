@@ -1,6 +1,6 @@
 name: ParticleWorkshop
 main: sk.tomsik68.particleworkshop.ParticleWorkshopPlugin
-version: 0.0
+version: 0.1
 commands:
     pws:
         description: Particle workshop base-command
