@@ -1,7 +1,9 @@
 package sk.tomsik68.particleworkshop;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+
 import sk.tomsik68.particleworkshop.api.IParticlePlayer;
 import sk.tomsik68.particleworkshop.api.LocationIterator;
 import sk.tomsik68.particleworkshop.impl.AlwaysOnEntity;
@@ -19,11 +21,10 @@ public class ParticleTaskFactory {
 			itr = new AlwaysOnEntity(entity, data.getRelativeVector(),
 					data.isRepeat());
 		} else
-			itr = new OneLocation(entity.getLocation().add(
-					data.getRelativeVector()), data.isRepeat());
+			itr = new OneLocation(entity.getLocation(), data.isRepeat());
 		IParticlePlayer particlePlayer = ParticlePlayerRegistry.instance
 				.getParticlePlayer(data.getParticleName());
-		PlayParticleTask task = new PlayParticleTask(itr, particlePlayer,
+		PlayParticleTask task = new PlayParticleTask(data, itr, particlePlayer,
 				data.getEffectData(), data.getOwnerId(), data.getCount(), data
 						.getSituation().normalize());
 		return task;
@@ -32,14 +33,27 @@ public class ParticleTaskFactory {
 	public static final PlayParticleTask createTaskOnLocation(
 			ParticleTaskData data, Location location) {
 		LocationIterator itr;
-		itr = new OneLocation(location.add(data.getRelativeVector()),
-				data.isRepeat());
+		data.setOneLocation(location);
+		itr = new OneLocation(location, data.isRepeat());
 		IParticlePlayer particlePlayer = ParticlePlayerRegistry.instance
 				.getParticlePlayer(data.getParticleName());
-		PlayParticleTask task = new PlayParticleTask(itr, particlePlayer,
+		PlayParticleTask task = new PlayParticleTask(data, itr, particlePlayer,
 				data.getEffectData(), data.getOwnerId(), data.getCount(), data
 						.getSituation().normalize());
 		return task;
+	}
 
+	public static final PlayParticleTask createTask(ParticleTaskData data) {
+		LocationIterator itr = null;
+		if (!data.isFollow()) {
+			itr = new OneLocation(data.getOneLocation(), data.isRepeat());
+		}
+		Validate.notNull(itr);
+		IParticlePlayer particlePlayer = ParticlePlayerRegistry.instance
+				.getParticlePlayer(data.getParticleName());
+		PlayParticleTask task = new PlayParticleTask(data, itr, particlePlayer,
+				data.getEffectData(), data.getOwnerId(), data.getCount(), data
+						.getSituation().normalize());
+		return task;
 	}
 }

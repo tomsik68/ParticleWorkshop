@@ -14,11 +14,11 @@ import org.bukkit.util.Vector;
 import sk.tomsik68.particleworkshop.ParticleTaskData;
 import sk.tomsik68.particleworkshop.ParticleTaskFactory;
 import sk.tomsik68.particleworkshop.ParticlesManager;
-import sk.tomsik68.particleworkshop.api.ParticlePlaySituations;
+import sk.tomsik68.particleworkshop.PlayerWandData;
 import sk.tomsik68.particleworkshop.api.IParticlePlayer;
+import sk.tomsik68.particleworkshop.api.ParticlePlaySituations;
 import sk.tomsik68.particleworkshop.commands.error.InvalidArgumentCountException;
 import sk.tomsik68.particleworkshop.commands.error.InvalidArgumentException;
-import sk.tomsik68.particleworkshop.impl.OneLocation;
 import sk.tomsik68.particleworkshop.players.ParticlePlayerRegistry;
 import sk.tomsik68.particleworkshop.tasks.PlayParticleTask;
 import sk.tomsik68.permsguru.EPermissions;
@@ -42,7 +42,7 @@ public class PlayCommand extends CommandHandler {
 		if (particlePlayer == null)
 			throw new InvalidArgumentException(args[0]);
 		PlayParticleTask task = null;
-		if (args.length > 2) {
+		if (args.length >= 2) {
 			ParticleTaskData data = new ParticleTaskData(
 					((Player) sender).getUniqueId());
 			int relativeC = 0;
@@ -87,14 +87,20 @@ public class PlayCommand extends CommandHandler {
 
 			Vector relativeVector = new Vector(relative[0], relative[1],
 					relative[2]);
-			data.setRelativeVector(relativeVector);
+			data.setRelativeVector(PlayerWandData.ZERO_VECTOR);
 			data.setCount(1);
 			task = ParticleTaskFactory.createTaskOnLocation(data,
-					((Player) sender).getLocation());
+					((Player) sender).getLocation().add(relativeVector));
 		} else {
-			task = new PlayParticleTask(new OneLocation(
-					((Player) sender).getLocation(), false), particlePlayer, 4,
+			ParticleTaskData data = new ParticleTaskData(
 					((Player) sender).getUniqueId());
+			data.setRepeat(false);
+			data.setFollow(false);
+			data.setParticleName(args[0]);
+			data.setRelativeVector(PlayerWandData.ZERO_VECTOR);
+			data.setSituation(ParticlePlaySituations.ALWAYS);
+			data.setOneLocation(((Player) sender).getLocation());
+			task = ParticleTaskFactory.createTask(data);
 		}
 		if (task != null) {
 			sender.sendMessage(ChatColor.GREEN

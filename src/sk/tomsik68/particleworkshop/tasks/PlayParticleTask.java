@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 
+import sk.tomsik68.particleworkshop.ParticleTaskData;
 import sk.tomsik68.particleworkshop.api.IParticlePlaySituation;
 import sk.tomsik68.particleworkshop.api.IParticlePlayer;
 import sk.tomsik68.particleworkshop.api.LocationIterator;
@@ -12,33 +13,36 @@ import sk.tomsik68.particleworkshop.api.ParticlePlaySituations;
 public class PlayParticleTask implements Runnable {
 	private final LocationIterator locations;
 	private final IParticlePlayer particle;
-	private final int data;
+	private final int effectData;
 	private boolean finished = false;
 	private final IParticlePlaySituation[] rules;
 	private final UUID owner;
 	private final int count;
+	private final ParticleTaskData data;
 
-	public PlayParticleTask(LocationIterator locations,
-			IParticlePlayer particle, int data, UUID player) {
-		this(locations, particle, data, player, ParticlePlaySituations.ALWAYS
-				.normalize());
+	public PlayParticleTask(ParticleTaskData origin,
+			LocationIterator locations, IParticlePlayer particle, int data,
+			UUID player) {
+		this(origin, locations, particle, data, player,
+				ParticlePlaySituations.ALWAYS.normalize());
 	}
 
-	public PlayParticleTask(LocationIterator locations,
-			IParticlePlayer particle, int data, UUID player,
-			IParticlePlaySituation... rulz) {
-		this(locations, particle, data, player, 1, rulz);
+	public PlayParticleTask(ParticleTaskData origin,
+			LocationIterator locations, IParticlePlayer particle, int data,
+			UUID player, IParticlePlaySituation... rulz) {
+		this(origin, locations, particle, data, player, 1, rulz);
 	}
 
-	public PlayParticleTask(LocationIterator locations,
-			IParticlePlayer particle, int data, UUID player, int count,
-			IParticlePlaySituation... rulz) {
+	public PlayParticleTask(ParticleTaskData origin,
+			LocationIterator locations, IParticlePlayer particle, int data,
+			UUID player, int count, IParticlePlaySituation... rulz) {
 		this.locations = locations;
 		this.particle = particle;
-		this.data = data;
+		this.effectData = data;
 		rules = rulz;
 		owner = player;
 		this.count = count;
+		this.data = origin;
 	}
 
 	@Override
@@ -57,7 +61,7 @@ public class PlayParticleTask implements Runnable {
 						break;
 				}
 				if (plays)
-					particle.playParticle(loc.getWorld(), x, y, z, data);
+					particle.playParticle(loc.getWorld(), x, y, z, effectData);
 			}
 		} else
 			remove();
@@ -75,8 +79,8 @@ public class PlayParticleTask implements Runnable {
 		return particle;
 	}
 
-	public int getData() {
-		return data;
+	public int getEffectData() {
+		return effectData;
 	}
 
 	public boolean hasFinished() {
@@ -93,5 +97,9 @@ public class PlayParticleTask implements Runnable {
 
 	public IParticlePlaySituation[] getRules() {
 		return rules;
+	}
+
+	public ParticleTaskData getData() {
+		return data;
 	}
 }

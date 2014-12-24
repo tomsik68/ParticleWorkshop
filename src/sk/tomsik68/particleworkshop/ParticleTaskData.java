@@ -2,14 +2,12 @@ package sk.tomsik68.particleworkshop;
 
 import java.util.UUID;
 
-import org.bukkit.Material;
+import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import sk.tomsik68.particleworkshop.api.IParticlePlaySituation;
 import sk.tomsik68.particleworkshop.api.ParticlePlaySituations;
 
 public class ParticleTaskData {
-	private Material wandType;
 	private String particleName;
 	private boolean follow, repeat;
 	private int effectData;
@@ -17,17 +15,10 @@ public class ParticleTaskData {
 	private Vector relativeVector;
 	private final UUID ownerId;
 	private int count;
+	private Location oneLocation;
 
 	public ParticleTaskData(UUID owner) {
 		this.ownerId = owner;
-	}
-
-	public Material getWandType() {
-		return wandType;
-	}
-
-	public void setWandType(Material wandType) {
-		this.wandType = wandType;
 	}
 
 	public boolean isFollow() {
@@ -88,6 +79,14 @@ public class ParticleTaskData {
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	public Location getOneLocation() {
+		return oneLocation;
+	}
+
+	public void setOneLocation(Location oneLocation) {
+		this.oneLocation = oneLocation;
 	}
 
 }

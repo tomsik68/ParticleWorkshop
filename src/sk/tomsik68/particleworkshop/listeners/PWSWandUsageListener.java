@@ -11,7 +11,7 @@ import org.bukkit.metadata.MetadataValue;
 import sk.tomsik68.particleworkshop.ParticleTaskFactory;
 import sk.tomsik68.particleworkshop.ParticleWorkshopPlugin;
 import sk.tomsik68.particleworkshop.ParticlesManager;
-import sk.tomsik68.particleworkshop.ParticleTaskData;
+import sk.tomsik68.particleworkshop.PlayerWandData;
 import sk.tomsik68.particleworkshop.tasks.PlayParticleTask;
 
 public class PWSWandUsageListener implements Listener {
@@ -23,36 +23,36 @@ public class PWSWandUsageListener implements Listener {
 
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		ParticleTaskData data = getWandData(event.getPlayer());
+		PlayerWandData data = getWandData(event.getPlayer());
 		if (data != null
 				&& event.getAction() == Action.RIGHT_CLICK_BLOCK
 				&& event.getPlayer().getItemInHand().getType()
-						.equals(data.getWandType())) {
+						.equals(data.getItem())) {
 			PlayParticleTask task = ParticleTaskFactory.createTaskOnLocation(
-					data, event.getClickedBlock().getLocation());
-
+					data.getTaskData(), event.getClickedBlock().getLocation()
+							.add(data.getRelativeVector()));
 			ParticlesManager.instance.addTask(task);
 		}
 	}
 
 	@EventHandler
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-		ParticleTaskData data = getWandData(event.getPlayer());
+		PlayerWandData data = getWandData(event.getPlayer());
 		if (data != null
 				&& event.getPlayer().getItemInHand().getType()
-						.equals(data.getWandType())) {
+						.equals(data.getItem())) {
 
 			PlayParticleTask task = ParticleTaskFactory.createTaskOnEntity(
-					data, event.getRightClicked());
+					data.getTaskData(), event.getRightClicked());
 			ParticlesManager.instance.addTask(task);
 		}
 	}
 
-	private ParticleTaskData getWandData(Player player) {
+	private PlayerWandData getWandData(Player player) {
 		for (MetadataValue value : player.getMetadata(WAND_METADATA_KEY)) {
 			if (value.getOwningPlugin().equals(
 					ParticleWorkshopPlugin.getInstance())) {
-				ParticleTaskData data = (ParticleTaskData) value.value();
+				PlayerWandData data = (PlayerWandData) value.value();
 				return data;
 			}
 		}

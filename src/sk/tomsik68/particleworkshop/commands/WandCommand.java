@@ -13,9 +13,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
-import sk.tomsik68.particleworkshop.ParticleWorkshopPlugin;
 import sk.tomsik68.particleworkshop.ParticleTaskData;
-import sk.tomsik68.particleworkshop.api.IParticlePlaySituation;
+import sk.tomsik68.particleworkshop.ParticleWorkshopPlugin;
+import sk.tomsik68.particleworkshop.PlayerWandData;
 import sk.tomsik68.particleworkshop.api.IParticlePlayer;
 import sk.tomsik68.particleworkshop.api.ParticlePlaySituations;
 import sk.tomsik68.particleworkshop.listeners.PWSWandUsageListener;
@@ -48,9 +48,12 @@ public class WandCommand extends CommandHandler {
 			// activate wand using the player's current equipped item
 			Player player = (Player) sender;
 			if (player.getItemInHand() != null) {
-				ParticleTaskData wandData = new ParticleTaskData(
+
+				ParticleTaskData taskData = new ParticleTaskData(
 						player.getUniqueId());
-				wandData.setWandType(player.getItemInHand().getType());
+				PlayerWandData wandData = new PlayerWandData(taskData, player
+						.getItemInHand().getType());
+				// wandData.setWandType(player.getItemInHand().getType());
 				IParticlePlayer particle = ParticlePlayerRegistry.instance
 						.getParticlePlayer(args[0]);
 				if (particle == null) {
@@ -101,13 +104,19 @@ public class WandCommand extends CommandHandler {
 						.valueOf(options.valueOf("s").toString());
 				int data = (Integer) options.valueOf("d");
 				int count = (Integer) options.valueOf("c");
-				wandData.setCount(count);
-				wandData.setFollow(follow);
-				wandData.setRepeat(repeat);
-				wandData.setSituation(situation);
-				wandData.setEffectData(data);
-				wandData.setRelativeVector(relativeVector);
-				wandData.setParticleName(args[0]);
+				taskData.setCount(count);
+				taskData.setFollow(follow);
+				taskData.setRepeat(repeat);
+				taskData.setSituation(situation);
+				taskData.setEffectData(data);
+				if (taskData.isFollow()) {
+					taskData.setRelativeVector(relativeVector);
+					// wandData has ZERO_VECTOR set
+				} else {
+					taskData.setRelativeVector(PlayerWandData.ZERO_VECTOR);
+					wandData.setRelativeVector(relativeVector);
+				}
+				taskData.setParticleName(args[0]);
 				player.setMetadata(
 						PWSWandUsageListener.WAND_METADATA_KEY,
 						new FixedMetadataValue(ParticleWorkshopPlugin

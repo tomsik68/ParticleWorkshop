@@ -1,50 +1,68 @@
 package sk.tomsik68.particleworkshop;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 
 import sk.tomsik68.particleworkshop.tasks.PlayParticleTask;
 
 public class ParticlesManager implements Runnable {
-    private final HashSet<PlayParticleTask> tasks = new HashSet<PlayParticleTask>();
-    private final HashSet<PlayParticleTask> tasksToAdd = new HashSet<PlayParticleTask>();
-    private final HashSet<PlayParticleTask> tasksToRemove = new HashSet<PlayParticleTask>();
-    public static ParticlesManager instance = new ParticlesManager();
+	private final HashSet<PlayParticleTask> tasks = new HashSet<PlayParticleTask>();
+	private final HashSet<PlayParticleTask> tasksToAdd = new HashSet<PlayParticleTask>();
+	private final HashSet<PlayParticleTask> tasksToRemove = new HashSet<PlayParticleTask>();
+	public static ParticlesManager instance = new ParticlesManager();
 
-    private ParticlesManager() {
-    }
+	private ParticlesManager() {
+	}
 
-    public void addTask(PlayParticleTask task) {
-        synchronized (tasksToAdd) {
-            tasksToAdd.add(task);
-        }
-    }
+	public void addTask(PlayParticleTask task) {
+		synchronized (tasksToAdd) {
+			tasksToAdd.add(task);
+		}
+	}
 
-    public void removeTask(PlayParticleTask task) {
-        synchronized (tasksToRemove) {
-            tasksToRemove.add(task);
-        }
+	public void removeTask(PlayParticleTask task) {
+		synchronized (tasksToRemove) {
+			tasksToRemove.add(task);
+		}
+	}
 
-    }
+	@Override
+	public void run() {
+		synchronized (tasks) {
+			if (!tasksToAdd.isEmpty()) {
+				tasks.addAll(tasksToAdd);
+				tasksToAdd.clear();
+			}
+			for (PlayParticleTask task : tasks) {
+				task.run();
+				if (task.hasFinished()) {
+					tasksToRemove.add(task);
+				}
+			}
+			if (!tasksToRemove.isEmpty()) {
+				tasks.removeAll(tasksToRemove);
+				tasksToRemove.clear();
+			}
+		}
 
-    @Override
-    public void run() {
-        synchronized (tasks) {
-            if (!tasksToAdd.isEmpty()) {
-                tasks.addAll(tasksToAdd);
-                tasksToAdd.clear();
-            }
-            for (PlayParticleTask task : tasks) {
-                task.run();
-                if (task.hasFinished()) {
-                    tasksToRemove.add(task);
-                }
-            }
-            if (!tasksToRemove.isEmpty()) {
-                tasks.removeAll(tasksToRemove);
-                tasksToRemove.clear();
-            }
-        }
+	}
 
-    }
+	public List<ParticleTaskData> getParticles() {
+		ArrayList<ParticleTaskData> result = new ArrayList<ParticleTaskData>();
+		synchronized (tasks) {
+			for (PlayParticleTask task : tasks) {
+				result.add(task.getData());
+			}
+		}
+		return result;
+	}
+
+	public void createTasks(List<ParticleTaskData> particleTasksData) {
+		for (ParticleTaskData taskData : particleTasksData) {
+			addTask(ParticleTaskFactory.createTask(taskData));
+		}
+	}
 
 }
