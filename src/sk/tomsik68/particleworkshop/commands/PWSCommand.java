@@ -16,61 +16,73 @@ import sk.tomsik68.particleworkshop.players.ParticlePlayerRegistry;
 import sk.tomsik68.permsguru.EPermissions;
 
 public class PWSCommand implements TabExecutor {
-    private final Map<String, CommandHandler> subCommands = new HashMap<String, CommandHandler>();
+	private final Map<String, CommandHandler> subCommands = new HashMap<String, CommandHandler>();
 
-    public PWSCommand(EPermissions perms) {
-        subCommands.put("play", new PlayCommand(perms));
-        subCommands.put("wand", new WandCommand(perms));
-    }
+	public PWSCommand(EPermissions perms) {
+		subCommands.put("play", new PlayCommand(perms));
+		subCommands.put("wand", new WandCommand(perms));
+	}
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command c, String label, String[] args) {
-        if (args.length >= 1) {
-            if (args[0].equalsIgnoreCase("help") || args[0].equalsIgnoreCase("?")) {
-                sendHelp(sender);
-                return true;
-            }
-            String[] newArgs = new String[args.length - 1];
-            System.arraycopy(args, 1, newArgs, 0, args.length - 1);
+	@Override
+	public boolean onCommand(CommandSender sender, Command c, String label,
+			String[] args) {
+		if (args.length >= 1) {
+			if (args[0].equalsIgnoreCase("help")
+					|| args[0].equalsIgnoreCase("?")) {
+				sendHelp(sender);
+				return true;
+			}
+			String[] newArgs = new String[args.length - 1];
+			System.arraycopy(args, 1, newArgs, 0, args.length - 1);
 
-            if (subCommands.containsKey(args[0]))
-                return subCommands.get(args[0]).onCommand(sender, c, label, newArgs);
-            else {
-                sender.sendMessage(ChatColor.RED + "[ParticleWorkshop] Command not found.");
-            }
-        }
-        return true;
-    }
+			if (subCommands.containsKey(args[0])) {
+				try {
+					return subCommands.get(args[0]).onCommand(sender, c, label,
+							newArgs);
+				} catch (Exception e) {
+					sendHelp(sender);
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED
+						+ "[ParticleWorkshop] Command not found.");
+			}
+		}
+		return true;
+	}
 
-    private void sendHelp(CommandSender sender) {
-        sender.sendMessage(ChatColor.GOLD + "====ParticleWorkshop by Tomsik68====");
-        sender.sendMessage(ChatColor.GOLD + "================HELP================");
-        for (Entry<String, CommandHandler> entry : subCommands.entrySet()) {
-            sender.sendMessage(String.format("/%s %s %s - %s", "pws", entry.getKey(), entry.getValue().getArgs(), entry.getValue().getDescription()));
-        }
-    }
+	private void sendHelp(CommandSender sender) {
+		sender.sendMessage(ChatColor.GOLD
+				+ "================ParticleWorkshop help================");
+		for (Entry<String, CommandHandler> entry : subCommands.entrySet()) {
+			sender.sendMessage(String.format("/%s %s %s - %s", "pws", entry
+					.getKey(), entry.getValue().getArgs(), entry.getValue()
+					.getDescription()));
+		}
+	}
 
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+	public List<String> onTabComplete(CommandSender sender, Command command,
+			String alias, String[] args) {
+		ArrayList<String> result = new ArrayList<String>();
 
-        ArrayList<String> result = new ArrayList<String>();
-
-        if (command.getName().equalsIgnoreCase("pws")) {
-            if (args.length == 0) {
-                result.add("wand");
-                result.add("play");
-            } else if (args.length > 0) {
-                if (args[0].equalsIgnoreCase("play")) {
-                    result.addAll(ParticlePlayerRegistry.instance.getParticlePlayerNames());
-                    result.add("-r");
-                    result.add("--repeat");
-                    result.add("-f");
-                    result.add("--follow");
-                    for (ParticlePlaySituations sit : ParticlePlaySituations.values()) {
-                        result.add(sit.name());
-                    }
-                }
-            }
-        }
-        return result;
-    }
+		if (command.getName().equalsIgnoreCase("pws")) {
+			if (args.length == 0) {
+				result.add("wand");
+				result.add("play");
+			} else if (args.length > 0) {
+				if (args[0].equalsIgnoreCase("play")) {
+					result.addAll(ParticlePlayerRegistry.instance
+							.getParticlePlayerNames());
+					result.add("-r");
+					result.add("--repeat");
+					result.add("-f");
+					result.add("--follow");
+					for (ParticlePlaySituations sit : ParticlePlaySituations
+							.values()) {
+						result.add(sit.name());
+					}
+				}
+			}
+		}
+		return result;
+	}
 }

@@ -89,8 +89,12 @@ public class PlayCommand extends CommandHandler {
 					relative[2]);
 			data.setRelativeVector(PlayerWandData.ZERO_VECTOR);
 			data.setCount(1);
-			task = ParticleTaskFactory.createTaskOnLocation(data,
-					((Player) sender).getLocation().add(relativeVector));
+			if (!data.isFollow())
+				task = ParticleTaskFactory.createTaskOnLocation(data,
+						((Player) sender).getLocation().add(relativeVector));
+			else
+				task = ParticleTaskFactory.createTaskOnEntity(data,
+						(Player) sender);
 		} else {
 			ParticleTaskData data = new ParticleTaskData(
 					((Player) sender).getUniqueId());
