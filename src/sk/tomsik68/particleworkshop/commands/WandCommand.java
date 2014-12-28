@@ -44,7 +44,7 @@ public class WandCommand extends CommandHandler {
 				sender.sendMessage(ChatColor.GREEN
 						+ "[ParticleWorkshop] Your wand has been disabled.");
 			}
-		} else if (args.length >= 2) {
+		} else if (args.length >= 1) {
 			// activate wand using the player's current equipped item
 			Player player = (Player) sender;
 			if (player.getItemInHand() != null) {
@@ -75,9 +75,9 @@ public class WandCommand extends CommandHandler {
 						.ofType(Integer.class).defaultsTo(0);
 				parser.acceptsAll(Arrays.asList("c", "count"), "Count(integer)")
 						.withRequiredArg().ofType(Integer.class).defaultsTo(1);
-				String[] args2 = new String[args.length - 2];
-				System.arraycopy(args, 2, args2, 0, args.length - 2);
-				OptionSet options = parser.parse(args);
+				String[] args2 = new String[args.length - 1];
+				System.arraycopy(args, 1, args2, 0, args.length - 1);
+				OptionSet options = parser.parse(args2);
 				boolean follow = options.has("f");
 				boolean repeat = options.has("r");
 

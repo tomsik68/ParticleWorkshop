@@ -1,7 +1,7 @@
 package sk.tomsik68.particleworkshop.impl;
 
+import sk.tomsik68.particleworkshop.PlayParticleTask;
 import sk.tomsik68.particleworkshop.api.ICostCalculator;
-import sk.tomsik68.particleworkshop.tasks.PlayParticleTask;
 
 public class DefaultCostCalculator implements ICostCalculator {
     @Override

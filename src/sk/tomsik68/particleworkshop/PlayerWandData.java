@@ -15,7 +15,7 @@ public class PlayerWandData {
 	}
 
 	public ParticleTaskData getTaskData() {
-		return taskData;
+		return taskData.deepCopy();
 	}
 
 	public Material getItem() {

@@ -31,6 +31,7 @@ public class ParticleTaskDataListIO implements IDataIO<List<ParticleTaskData>> {
 			element.setParticleName(ois.readUTF());
 			element.setSituation(ParticlePlaySituations.values()[ois.readInt()]);
 			element.setCount(ois.readInt());
+			element.setNumber(ois.readInt());
 			element.setEffectData(ois.readInt());
 			element.setFollow(ois.readBoolean());
 			if (!element.isFollow()) {
@@ -58,6 +59,7 @@ public class ParticleTaskDataListIO implements IDataIO<List<ParticleTaskData>> {
 			oos.writeUTF(e.getParticleName());
 			oos.writeInt(e.getSituation().ordinal());
 			oos.writeInt(e.getCount());
+			oos.writeInt(e.getNumber());
 			oos.writeInt(e.getEffectData());
 			oos.writeBoolean(e.isFollow());
 			if (!e.isFollow()) {

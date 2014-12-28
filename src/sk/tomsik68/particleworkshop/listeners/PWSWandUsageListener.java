@@ -11,8 +11,8 @@ import org.bukkit.metadata.MetadataValue;
 import sk.tomsik68.particleworkshop.ParticleTaskFactory;
 import sk.tomsik68.particleworkshop.ParticleWorkshopPlugin;
 import sk.tomsik68.particleworkshop.ParticlesManager;
+import sk.tomsik68.particleworkshop.PlayParticleTask;
 import sk.tomsik68.particleworkshop.PlayerWandData;
-import sk.tomsik68.particleworkshop.tasks.PlayParticleTask;
 
 public class PWSWandUsageListener implements Listener {
 	public static final String WAND_METADATA_KEY = "pws.wand";
@@ -29,9 +29,12 @@ public class PWSWandUsageListener implements Listener {
 				&& event.getPlayer().getItemInHand().getType()
 						.equals(data.getItem())) {
 			PlayParticleTask task = ParticleTaskFactory.createTaskOnLocation(
-					data.getTaskData(), event.getClickedBlock().getLocation()
+					data.getTaskData().deepCopy(), event.getClickedBlock().getLocation()
 							.add(data.getRelativeVector()));
 			ParticlesManager.instance.addTask(task);
+			event.getPlayer().sendMessage(
+					"[ParticleWorkshop] Particle number:"
+							+ task.getTaskNumber());
 		}
 	}
 
@@ -45,6 +48,9 @@ public class PWSWandUsageListener implements Listener {
 			PlayParticleTask task = ParticleTaskFactory.createTaskOnEntity(
 					data.getTaskData(), event.getRightClicked());
 			ParticlesManager.instance.addTask(task);
+			event.getPlayer().sendMessage(
+					"[ParticleWorkshop] Particle number:"
+							+ task.getTaskNumber());
 		}
 	}
 

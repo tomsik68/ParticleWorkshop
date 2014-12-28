@@ -1,10 +1,9 @@
-package sk.tomsik68.particleworkshop.tasks;
+package sk.tomsik68.particleworkshop;
 
 import java.util.UUID;
 
 import org.bukkit.Location;
 
-import sk.tomsik68.particleworkshop.ParticleTaskData;
 import sk.tomsik68.particleworkshop.api.IParticlePlaySituation;
 import sk.tomsik68.particleworkshop.api.IParticlePlayer;
 import sk.tomsik68.particleworkshop.api.LocationIterator;
@@ -18,24 +17,25 @@ public class PlayParticleTask implements Runnable {
 	private final IParticlePlaySituation[] rules;
 	private final UUID owner;
 	private final int count;
+	private int taskNumber;
 	private final ParticleTaskData data;
 
 	public PlayParticleTask(ParticleTaskData origin,
 			LocationIterator locations, IParticlePlayer particle, int data,
-			UUID player) {
-		this(origin, locations, particle, data, player,
+			UUID player, int number) {
+		this(origin, locations, particle, data, player, number,
 				ParticlePlaySituations.ALWAYS.normalize());
 	}
 
 	public PlayParticleTask(ParticleTaskData origin,
 			LocationIterator locations, IParticlePlayer particle, int data,
-			UUID player, IParticlePlaySituation... rulz) {
-		this(origin, locations, particle, data, player, 1, rulz);
+			UUID player, int number, IParticlePlaySituation... rulz) {
+		this(origin, locations, particle, data, player, 1, number, rulz);
 	}
 
 	public PlayParticleTask(ParticleTaskData origin,
 			LocationIterator locations, IParticlePlayer particle, int data,
-			UUID player, int count, IParticlePlaySituation... rulz) {
+			UUID player, int count, int number, IParticlePlaySituation... rulz) {
 		this.locations = locations;
 		this.particle = particle;
 		this.effectData = data;
@@ -43,6 +43,7 @@ public class PlayParticleTask implements Runnable {
 		owner = player;
 		this.count = count;
 		this.data = origin;
+		this.taskNumber = number;
 	}
 
 	@Override
@@ -101,5 +102,13 @@ public class PlayParticleTask implements Runnable {
 
 	public ParticleTaskData getData() {
 		return data;
+	}
+
+	public int getTaskNumber() {
+		return taskNumber;
+	}
+
+	void setTaskNumber(int tn) {
+		taskNumber = tn;
 	}
 }

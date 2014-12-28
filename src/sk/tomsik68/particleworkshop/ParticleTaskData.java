@@ -14,7 +14,7 @@ public class ParticleTaskData {
 	private ParticlePlaySituations situation;
 	private Vector relativeVector;
 	private final UUID ownerId;
-	private int count;
+	private int count, number = -1;
 	private Location oneLocation;
 
 	public ParticleTaskData(UUID owner) {
@@ -87,6 +87,28 @@ public class ParticleTaskData {
 
 	public void setOneLocation(Location oneLocation) {
 		this.oneLocation = oneLocation;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
+	public ParticleTaskData deepCopy() {
+		ParticleTaskData clone = new ParticleTaskData(ownerId);
+		clone.setCount(count);
+		clone.setEffectData(effectData);
+		clone.setFollow(follow);
+		clone.setRepeat(repeat);
+		clone.setRelativeVector(relativeVector);
+		clone.setOneLocation(oneLocation);
+		clone.setParticleName(particleName);
+		clone.setSituation(situation);
+		return clone;
+
 	}
 
 }

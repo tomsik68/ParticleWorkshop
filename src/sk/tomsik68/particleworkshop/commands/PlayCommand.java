@@ -14,13 +14,13 @@ import org.bukkit.util.Vector;
 import sk.tomsik68.particleworkshop.ParticleTaskData;
 import sk.tomsik68.particleworkshop.ParticleTaskFactory;
 import sk.tomsik68.particleworkshop.ParticlesManager;
+import sk.tomsik68.particleworkshop.PlayParticleTask;
 import sk.tomsik68.particleworkshop.PlayerWandData;
 import sk.tomsik68.particleworkshop.api.IParticlePlayer;
 import sk.tomsik68.particleworkshop.api.ParticlePlaySituations;
 import sk.tomsik68.particleworkshop.commands.error.InvalidArgumentCountException;
 import sk.tomsik68.particleworkshop.commands.error.InvalidArgumentException;
 import sk.tomsik68.particleworkshop.players.ParticlePlayerRegistry;
-import sk.tomsik68.particleworkshop.tasks.PlayParticleTask;
 import sk.tomsik68.permsguru.EPermissions;
 
 public class PlayCommand extends CommandHandler {
@@ -30,7 +30,7 @@ public class PlayCommand extends CommandHandler {
 		setPlayerOnly(true);
 		setPermission("pws.play");
 		setDescription("Plays specified particle effect on player.");
-		setArgs("<effect> <name> [-r(epeat)] [-f(ollow)] [-d <data>] [-s <situation>]");
+		setArgs("<effect> [-r(epeat)] [-f(ollow)] [-d <data>] [-s <situation>]");
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class PlayCommand extends CommandHandler {
 		if (particlePlayer == null)
 			throw new InvalidArgumentException(args[0]);
 		PlayParticleTask task = null;
-		if (args.length >= 2) {
+		if (args.length >= 1) {
 			ParticleTaskData data = new ParticleTaskData(
 					((Player) sender).getUniqueId());
 			int relativeC = 0;
@@ -62,7 +62,9 @@ public class PlayCommand extends CommandHandler {
 					"Effect data(integer)").withRequiredArg()
 					.ofType(Integer.class);
 
-			OptionSet options = parser.parse(args);
+			String[] args2 = new String[args.length - 1];
+			System.arraycopy(args, 1, args2, 0, args.length - 1);
+			OptionSet options = parser.parse(args2);
 			data.setParticleName(args[0]);
 			data.setSituation((ParticlePlaySituations) options.valueOf("s"));
 			data.setRepeat(options.has("r"));
@@ -107,9 +109,10 @@ public class PlayCommand extends CommandHandler {
 			task = ParticleTaskFactory.createTask(data);
 		}
 		if (task != null) {
-			sender.sendMessage(ChatColor.GREEN
-					+ "[ParticleWorkshop] Particle added.");
 			ParticlesManager.instance.addTask(task);
+			sender.sendMessage(ChatColor.GREEN
+					+ "[ParticleWorkshop] Particle added(number: "
+					+ task.getTaskNumber() + ")");
 		}
 	}
 }
