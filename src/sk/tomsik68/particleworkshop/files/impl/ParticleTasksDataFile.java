@@ -6,9 +6,9 @@ import java.util.List;
 
 import javax.naming.NameAlreadyBoundException;
 
-import sk.tomsik68.particleworkshop.ParticleTaskData;
 import sk.tomsik68.particleworkshop.ParticleWorkshopPlugin;
 import sk.tomsik68.particleworkshop.files.api.DataFile;
+import sk.tomsik68.particleworkshop.logic.ParticleTaskData;
 
 public class ParticleTasksDataFile extends DataFile<List<ParticleTaskData>> {
 

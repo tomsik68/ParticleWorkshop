@@ -11,15 +11,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import sk.tomsik68.particleworkshop.ParticleTaskData;
-import sk.tomsik68.particleworkshop.ParticleTaskFactory;
-import sk.tomsik68.particleworkshop.ParticlesManager;
-import sk.tomsik68.particleworkshop.PlayParticleTask;
-import sk.tomsik68.particleworkshop.PlayerWandData;
 import sk.tomsik68.particleworkshop.api.IParticlePlayer;
 import sk.tomsik68.particleworkshop.api.ParticlePlaySituations;
 import sk.tomsik68.particleworkshop.commands.error.InvalidArgumentCountException;
 import sk.tomsik68.particleworkshop.commands.error.InvalidArgumentException;
+import sk.tomsik68.particleworkshop.logic.ParticleTaskData;
+import sk.tomsik68.particleworkshop.logic.ParticleTaskFactory;
+import sk.tomsik68.particleworkshop.logic.ParticlesManager;
+import sk.tomsik68.particleworkshop.logic.PlayParticleTask;
+import sk.tomsik68.particleworkshop.logic.PlayerWandData;
 import sk.tomsik68.particleworkshop.players.ParticlePlayerRegistry;
 import sk.tomsik68.permsguru.EPermissions;
 
@@ -30,7 +30,7 @@ public class PlayCommand extends CommandHandler {
 		setPlayerOnly(true);
 		setPermission("pws.play");
 		setDescription("Plays specified particle effect on player.");
-		setArgs("<effect> [-r(epeat)] [-f(ollow)] [-d <data>] [-s <situation>]");
+		setArgs("<effect> [-r(epeat)] [-f(ollow)] [-d <data>] [-c <count>] [-s <situation>]");
 	}
 
 	@Override
@@ -61,6 +61,9 @@ public class PlayCommand extends CommandHandler {
 			parser.acceptsAll(Arrays.asList("d", "data"),
 					"Effect data(integer)").withRequiredArg()
 					.ofType(Integer.class);
+			parser.acceptsAll(Arrays.asList("c", "count"),
+					"How many times to play the effect").withRequiredArg()
+					.ofType(Integer.class).defaultsTo(1);
 
 			String[] args2 = new String[args.length - 1];
 			System.arraycopy(args, 1, args2, 0, args.length - 1);
@@ -89,14 +92,17 @@ public class PlayCommand extends CommandHandler {
 
 			Vector relativeVector = new Vector(relative[0], relative[1],
 					relative[2]);
-			data.setRelativeVector(PlayerWandData.ZERO_VECTOR);
-			data.setCount(1);
-			if (!data.isFollow())
+
+			data.setCount((int) options.valueOf("c"));
+			if (!data.isFollow()) {
+				data.setRelativeVector(PlayerWandData.ZERO_VECTOR);
 				task = ParticleTaskFactory.createTaskOnLocation(data,
 						((Player) sender).getLocation().add(relativeVector));
-			else
+			} else {
+				data.setRelativeVector(relativeVector);
 				task = ParticleTaskFactory.createTaskOnEntity(data,
 						(Player) sender);
+			}
 		} else {
 			ParticleTaskData data = new ParticleTaskData(
 					((Player) sender).getUniqueId());

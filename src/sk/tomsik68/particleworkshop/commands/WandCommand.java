@@ -13,12 +13,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
-import sk.tomsik68.particleworkshop.ParticleTaskData;
 import sk.tomsik68.particleworkshop.ParticleWorkshopPlugin;
-import sk.tomsik68.particleworkshop.PlayerWandData;
 import sk.tomsik68.particleworkshop.api.IParticlePlayer;
 import sk.tomsik68.particleworkshop.api.ParticlePlaySituations;
 import sk.tomsik68.particleworkshop.listeners.PWSWandUsageListener;
+import sk.tomsik68.particleworkshop.logic.ParticleTaskData;
+import sk.tomsik68.particleworkshop.logic.PlayerWandData;
 import sk.tomsik68.particleworkshop.players.ParticlePlayerRegistry;
 import sk.tomsik68.permsguru.EPermissions;
 

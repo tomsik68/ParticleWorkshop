@@ -3,9 +3,9 @@ package sk.tomsik68.particleworkshop.impl;
 import org.bukkit.entity.Player;
 
 import sk.tomsik68.particleworkshop.ParticleWorkshopPlugin;
-import sk.tomsik68.particleworkshop.PlayParticleTask;
 import sk.tomsik68.particleworkshop.api.ICostCalculator;
 import sk.tomsik68.particleworkshop.api.QuotaManager;
+import sk.tomsik68.particleworkshop.logic.PlayParticleTask;
 
 public class UnlimitedQuotaManager extends QuotaManager {
 

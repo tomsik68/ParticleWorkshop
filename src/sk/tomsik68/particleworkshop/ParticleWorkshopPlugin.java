@@ -1,6 +1,5 @@
 package sk.tomsik68.particleworkshop;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -11,19 +10,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 import sk.tomsik68.particleworkshop.api.QuotaManager;
 import sk.tomsik68.particleworkshop.commands.PWSCommand;
 import sk.tomsik68.particleworkshop.config.ConfigFile;
-import sk.tomsik68.particleworkshop.files.impl.ParticleTasksDataFile;
 import sk.tomsik68.particleworkshop.impl.DatabaseQuotaManager;
 import sk.tomsik68.particleworkshop.impl.DefaultCostCalculator;
 import sk.tomsik68.particleworkshop.impl.QuotaData;
 import sk.tomsik68.particleworkshop.impl.UnlimitedQuotaManager;
 import sk.tomsik68.particleworkshop.listeners.PWSWandUsageListener;
+import sk.tomsik68.particleworkshop.logic.ParticlesManager;
 import sk.tomsik68.particleworkshop.players.ParticlePlayerRegistry;
 
 public class ParticleWorkshopPlugin extends JavaPlugin {
 	public static Logger log;
 	private ConfigFile config;
 	public static QuotaManager quotaManager;
-	private ParticleTasksDataFile dataFile;
 
 	@Override
 	public void onEnable() {
@@ -47,18 +45,15 @@ public class ParticleWorkshopPlugin extends JavaPlugin {
 		log.info("Registering commands...");
 		getCommand("pws").setExecutor(new PWSCommand(config.getPermissions()));
 		log.info("Loading particles...");
-		dataFile = new ParticleTasksDataFile(new File(getDataFolder(),
-				"particles.bin"));
 		try {
-			List<ParticleTaskData> particleTasksData = dataFile.loadData();
-			ParticlesManager.instance.createTasks(particleTasksData);
+			ParticlesManager.instance.loadData(this);
 		} catch (Exception e) {
 			log.severe("Failed to load particle data:");
 			e.printStackTrace();
 		}
 		log.info("Enabling task...");
-		getServer().getScheduler().runTaskTimer(this,
-				ParticlesManager.instance, 5, 3);
+		ParticlesManager.instance
+				.scheduleTasks(this.getServer().getScheduler());
 		getServer().getPluginManager().registerEvents(
 				new PWSWandUsageListener(), this);
 		log.info("ParticleWorkshop is now enabled. Have fun :)");
@@ -68,7 +63,7 @@ public class ParticleWorkshopPlugin extends JavaPlugin {
 	public void onDisable() {
 		log.info("Saving particles...");
 		try {
-			dataFile.saveData(ParticlesManager.instance.getParticles());
+			ParticlesManager.instance.saveData(this);
 		} catch (Exception e) {
 			log.severe("Failed to save particle data:");
 			e.printStackTrace();

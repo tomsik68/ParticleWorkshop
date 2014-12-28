@@ -8,11 +8,11 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.metadata.MetadataValue;
 
-import sk.tomsik68.particleworkshop.ParticleTaskFactory;
 import sk.tomsik68.particleworkshop.ParticleWorkshopPlugin;
-import sk.tomsik68.particleworkshop.ParticlesManager;
-import sk.tomsik68.particleworkshop.PlayParticleTask;
-import sk.tomsik68.particleworkshop.PlayerWandData;
+import sk.tomsik68.particleworkshop.logic.ParticleTaskFactory;
+import sk.tomsik68.particleworkshop.logic.ParticlesManager;
+import sk.tomsik68.particleworkshop.logic.PlayParticleTask;
+import sk.tomsik68.particleworkshop.logic.PlayerWandData;
 
 public class PWSWandUsageListener implements Listener {
 	public static final String WAND_METADATA_KEY = "pws.wand";

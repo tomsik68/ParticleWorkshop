@@ -1,4 +1,4 @@
-package sk.tomsik68.particleworkshop;
+package sk.tomsik68.particleworkshop.logic;
 
 import java.util.UUID;
 

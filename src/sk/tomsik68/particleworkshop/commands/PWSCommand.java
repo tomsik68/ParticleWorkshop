@@ -21,6 +21,7 @@ public class PWSCommand implements TabExecutor {
 	public PWSCommand(EPermissions perms) {
 		subCommands.put("play", new PlayCommand(perms));
 		subCommands.put("wand", new WandCommand(perms));
+		subCommands.put("rm", new RemoveCommand(perms));
 	}
 
 	@Override
@@ -28,7 +29,8 @@ public class PWSCommand implements TabExecutor {
 			String[] args) {
 		if (args.length >= 1) {
 			if (args[0].equalsIgnoreCase("help")
-					|| args[0].equalsIgnoreCase("?")) {
+					|| args[0].equalsIgnoreCase("?")
+					|| args[0].equalsIgnoreCase("h")) {
 				sendHelp(sender);
 				return true;
 			}
@@ -36,15 +38,12 @@ public class PWSCommand implements TabExecutor {
 			System.arraycopy(args, 1, newArgs, 0, args.length - 1);
 
 			if (subCommands.containsKey(args[0])) {
-				try {
-					return subCommands.get(args[0]).onCommand(sender, c, label,
-							newArgs);
-				} catch (Exception e) {
-					sendHelp(sender);
-				}
+				return subCommands.get(args[0]).onCommand(sender, c, label,
+						newArgs);
 			} else {
 				sender.sendMessage(ChatColor.RED
 						+ "[ParticleWorkshop] Command not found.");
+				sendHelp(sender);
 			}
 		}
 		return true;
@@ -54,9 +53,9 @@ public class PWSCommand implements TabExecutor {
 		sender.sendMessage(ChatColor.GOLD
 				+ "================ParticleWorkshop help================");
 		for (Entry<String, CommandHandler> entry : subCommands.entrySet()) {
-			sender.sendMessage(String.format("/%s %s %s - %s", "pws", entry
-					.getKey(), entry.getValue().getArgs(), entry.getValue()
-					.getDescription()));
+			sender.sendMessage(String.format(ChatColor.GREEN + "/%s %s %s -"
+					+ ChatColor.AQUA + " %s", "pws", entry.getKey(), entry
+					.getValue().getArgs(), entry.getValue().getDescription()));
 		}
 	}
 

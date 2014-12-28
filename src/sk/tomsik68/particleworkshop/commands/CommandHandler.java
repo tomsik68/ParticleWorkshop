@@ -33,6 +33,8 @@ public abstract class CommandHandler implements CommandExecutor {
 				} catch (InvalidArgumentCountException e) {
 					sender.sendMessage(ChatColor.RED
 							+ "Invalid argument count.");
+					sender.sendMessage(ChatColor.RED + "Arguments: "
+							+ argsDescription);
 				} catch (Exception e) {
 					sender.sendMessage(ChatColor.RED
 							+ "An exception occured while executing command. See console for more details.");
@@ -97,4 +99,16 @@ public abstract class CommandHandler implements CommandExecutor {
 		}
 	}
 
+	public int getInt(String s) {
+		return Integer.parseInt(s);
+	}
+
+	public boolean isInt(String s) {
+		try {
+			Integer.parseInt(s);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 }

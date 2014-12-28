@@ -13,9 +13,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
-import sk.tomsik68.particleworkshop.ParticleTaskData;
 import sk.tomsik68.particleworkshop.api.ParticlePlaySituations;
 import sk.tomsik68.particleworkshop.files.api.IDataIO;
+import sk.tomsik68.particleworkshop.logic.ParticleTaskData;
 
 public class ParticleTaskDataListIO implements IDataIO<List<ParticleTaskData>> {
 

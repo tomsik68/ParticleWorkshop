@@ -1,4 +1,4 @@
-package sk.tomsik68.particleworkshop;
+package sk.tomsik68.particleworkshop.logic;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
