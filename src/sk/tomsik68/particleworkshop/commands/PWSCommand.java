@@ -19,7 +19,6 @@ public class PWSCommand implements TabExecutor {
 	private final Map<String, CommandHandler> subCommands = new HashMap<String, CommandHandler>();
 
 	public PWSCommand(EPermissions perms) {
-		subCommands.put("play", new PlayCommand(perms));
 		subCommands.put("wand", new WandCommand(perms));
 		subCommands.put("rm", new RemoveCommand(perms));
 	}

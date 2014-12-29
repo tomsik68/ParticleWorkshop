@@ -5,5 +5,4 @@ import java.util.Iterator;
 import org.bukkit.Location;
 
 public interface LocationIterator extends Iterator<Location> {
-    public String getName();
 }

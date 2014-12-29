@@ -1,20 +1,16 @@
 package sk.tomsik68.particleworkshop.impl;
 
 import sk.tomsik68.particleworkshop.api.ICostCalculator;
-import sk.tomsik68.particleworkshop.logic.PlayParticleTask;
+import sk.tomsik68.particleworkshop.logic.ParticleTaskData;
 
 public class DefaultCostCalculator implements ICostCalculator {
-    @Override
-    public float getCost(PlayParticleTask task) {
-        float rulesValue = task.getRules().length;
-        float iterValue = 0;
-        if (task.getIter() instanceof AlwaysOnEntity) {
-            iterValue = 0.75f;
-        } else if (task.getIter() instanceof OneLocation) {
-            iterValue = 0.35f;
-        }
-
-        return task.getCount() * (task.getRules().length + iterValue + rulesValue);
-    }
+	@Override
+	public float getCost(ParticleTaskData task) {
+		float rulesValue = 1;
+		float iterValue = 0;
+		// TODO: need to know whether OneLocation or AlwaysOnEntity
+		iterValue = 0.75f;
+		return task.getCount() * (iterValue + rulesValue);
+	}
 
 }

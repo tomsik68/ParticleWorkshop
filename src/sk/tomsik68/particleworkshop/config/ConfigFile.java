@@ -40,6 +40,10 @@ public class ConfigFile {
 		return config.getInt("radius");
 	}
 
+	public int getCountLimit(){
+		return config.getInt("count-limit", 10);
+	}
+
 	public boolean isQuotaLimited() {
 		return config.getBoolean("quota-limit-enabled");
 	}

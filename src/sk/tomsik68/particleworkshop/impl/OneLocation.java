@@ -5,32 +5,24 @@ import org.bukkit.Location;
 import sk.tomsik68.particleworkshop.api.LocationIterator;
 
 public class OneLocation implements LocationIterator {
-    private final Location loc;
-    private boolean iterated = false, repeat;
+	private final Location loc;
 
-    public OneLocation(Location location, boolean repeat) {
-        loc = location;
-        this.repeat = repeat;
-    }
+	public OneLocation(Location location) {
+		loc = location;
+	}
 
-    @Override
-    public boolean hasNext() {
-        return repeat || (!repeat && !iterated);
-    }
+	@Override
+	public boolean hasNext() {
+		return true;
+	}
 
-    @Override
-    public Location next() {
-        iterated = true;
-        return loc;
-    }
+	@Override
+	public Location next() {
+		return loc;
+	}
 
-    @Override
-    public void remove() {
-    }
-
-    @Override
-    public String getName() {
-        return "OneLocation";
-    }
+	@Override
+	public void remove() {
+	}
 
 }

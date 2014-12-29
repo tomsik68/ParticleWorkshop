@@ -7,49 +7,27 @@ import org.bukkit.Location;
 import sk.tomsik68.particleworkshop.api.IParticlePlaySituation;
 import sk.tomsik68.particleworkshop.api.IParticlePlayer;
 import sk.tomsik68.particleworkshop.api.LocationIterator;
-import sk.tomsik68.particleworkshop.api.ParticlePlaySituations;
 
-public class PlayParticleTask implements Runnable {
+class PlayParticleTask implements Runnable {
 	private final LocationIterator locations;
 	private final IParticlePlayer particle;
-	private final int effectData;
 	private boolean finished = false;
 	private final IParticlePlaySituation[] rules;
-	private final UUID owner;
-	private final int count;
-	private int taskNumber;
 	private final ParticleTaskData data;
 
 	public PlayParticleTask(ParticleTaskData origin,
-			LocationIterator locations, IParticlePlayer particle, int data,
-			UUID player, int number) {
-		this(origin, locations, particle, data, player, number,
-				ParticlePlaySituations.ALWAYS.normalize());
-	}
-
-	public PlayParticleTask(ParticleTaskData origin,
-			LocationIterator locations, IParticlePlayer particle, int data,
-			UUID player, int number, IParticlePlaySituation... rulz) {
-		this(origin, locations, particle, data, player, 1, number, rulz);
-	}
-
-	public PlayParticleTask(ParticleTaskData origin,
-			LocationIterator locations, IParticlePlayer particle, int data,
-			UUID player, int count, int number, IParticlePlaySituation... rulz) {
+			LocationIterator locations, IParticlePlayer particle) {
 		this.locations = locations;
 		this.particle = particle;
-		this.effectData = data;
-		rules = rulz;
-		owner = player;
-		this.count = count;
 		this.data = origin;
-		this.taskNumber = number;
+		rules = new IParticlePlaySituation[1];
+		rules[0] = data.getSituation().normalize();
 	}
 
 	@Override
 	public void run() {
 		if (locations.hasNext()) {
-			for (int c = 0; c < count; ++c) {
+			for (int c = 0; c < getCount(); ++c) {
 				Location loc = locations.next();
 				int x, y, z;
 				x = loc.getBlockX();
@@ -62,7 +40,8 @@ public class PlayParticleTask implements Runnable {
 						break;
 				}
 				if (plays)
-					particle.playParticle(loc.getWorld(), x, y, z, effectData);
+					particle.playParticle(loc.getWorld(), x, y, z,
+							getEffectData());
 			}
 		} else
 			remove();
@@ -81,7 +60,7 @@ public class PlayParticleTask implements Runnable {
 	}
 
 	public int getEffectData() {
-		return effectData;
+		return data.getEffectData();
 	}
 
 	public boolean hasFinished() {
@@ -89,11 +68,11 @@ public class PlayParticleTask implements Runnable {
 	}
 
 	public UUID getOwner() {
-		return owner;
+		return data.getOwnerId();
 	}
 
 	public int getCount() {
-		return count;
+		return data.getCount();
 	}
 
 	public IParticlePlaySituation[] getRules() {
@@ -105,10 +84,10 @@ public class PlayParticleTask implements Runnable {
 	}
 
 	public int getTaskNumber() {
-		return taskNumber;
+		return data.getNumber();
 	}
 
 	void setTaskNumber(int tn) {
-		taskNumber = tn;
+		data.setNumber(tn);
 	}
 }

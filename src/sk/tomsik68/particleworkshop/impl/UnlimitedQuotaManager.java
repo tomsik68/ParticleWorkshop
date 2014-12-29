@@ -5,21 +5,21 @@ import org.bukkit.entity.Player;
 import sk.tomsik68.particleworkshop.ParticleWorkshopPlugin;
 import sk.tomsik68.particleworkshop.api.ICostCalculator;
 import sk.tomsik68.particleworkshop.api.QuotaManager;
-import sk.tomsik68.particleworkshop.logic.PlayParticleTask;
+import sk.tomsik68.particleworkshop.logic.ParticleTaskData;
 
 public class UnlimitedQuotaManager extends QuotaManager {
 
     public UnlimitedQuotaManager() {
         super(new ICostCalculator() {
             @Override
-            public float getCost(PlayParticleTask task) {
+            public float getCost(ParticleTaskData task) {
                 return 0;
             }
         });
     }
 
     @Override
-    public boolean canAfford(Player player, PlayParticleTask task) {
+    public boolean canAfford(Player player, ParticleTaskData task) {
         return true;
     }
 

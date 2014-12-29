@@ -2,39 +2,17 @@ package sk.tomsik68.particleworkshop.logic;
 
 import java.util.UUID;
 
-import org.bukkit.Location;
-import org.bukkit.util.Vector;
-
 import sk.tomsik68.particleworkshop.api.ParticlePlaySituations;
 
 public class ParticleTaskData {
 	private String particleName;
-	private boolean follow, repeat;
 	private int effectData;
 	private ParticlePlaySituations situation;
-	private Vector relativeVector;
-	private final UUID ownerId;
+	private UUID ownerId;
 	private int count, number = -1;
-	private Location oneLocation;
+	private ParticleLocation location;
 
-	public ParticleTaskData(UUID owner) {
-		this.ownerId = owner;
-	}
-
-	public boolean isFollow() {
-		return follow;
-	}
-
-	public void setFollow(boolean follow) {
-		this.follow = follow;
-	}
-
-	public boolean isRepeat() {
-		return repeat;
-	}
-
-	public void setRepeat(boolean repeat) {
-		this.repeat = repeat;
+	public ParticleTaskData() {
 	}
 
 	public int getEffectData() {
@@ -51,14 +29,6 @@ public class ParticleTaskData {
 
 	public void setSituation(ParticlePlaySituations situation) {
 		this.situation = situation;
-	}
-
-	public Vector getRelativeVector() {
-		return relativeVector;
-	}
-
-	public void setRelativeVector(Vector relativeVector) {
-		this.relativeVector = relativeVector;
 	}
 
 	public String getParticleName() {
@@ -81,14 +51,6 @@ public class ParticleTaskData {
 		this.count = count;
 	}
 
-	public Location getOneLocation() {
-		return oneLocation;
-	}
-
-	public void setOneLocation(Location oneLocation) {
-		this.oneLocation = oneLocation;
-	}
-
 	public int getNumber() {
 		return number;
 	}
@@ -97,18 +59,27 @@ public class ParticleTaskData {
 		this.number = number;
 	}
 
-	public ParticleTaskData deepCopy() {
-		ParticleTaskData clone = new ParticleTaskData(ownerId);
+	ParticleTaskData deepCopy() {
+		ParticleTaskData clone = new ParticleTaskData();
+		clone.setOwnerId(ownerId);
 		clone.setCount(count);
 		clone.setEffectData(effectData);
-		clone.setFollow(follow);
-		clone.setRepeat(repeat);
-		clone.setRelativeVector(relativeVector);
-		clone.setOneLocation(oneLocation);
+		clone.setLocation(location);
 		clone.setParticleName(particleName);
 		clone.setSituation(situation);
 		return clone;
+	}
 
+	public void setOwnerId(UUID ownerId2) {
+		ownerId = ownerId2;
+	}
+
+	public ParticleLocation getLocation() {
+		return location;
+	}
+
+	public void setLocation(ParticleLocation location) {
+		this.location = location;
 	}
 
 }

@@ -3,10 +3,10 @@ package sk.tomsik68.particleworkshop.logic;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class PlayerParticleNumberData {
+class PlayerParticleNumberData {
 	private HashMap<UUID, Integer> playerData = new HashMap<>();
 
-	public PlayerParticleNumberData() {
+	PlayerParticleNumberData() {
 	}
 
 	private int getNumberFor(UUID player) {
@@ -31,7 +31,7 @@ public class PlayerParticleNumberData {
 		}
 	}
 
-	public int getNextFor(UUID player) {
+	int getNextFor(UUID player) {
 		int result = getNumberFor(player);
 		setNumberFor(player, Integer.valueOf(result + 1));
 		return result;
