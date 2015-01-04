@@ -15,7 +15,7 @@ public class ParticleTasksDataFile extends DataFile<List<ParticleTaskData>> {
 	public ParticleTasksDataFile(File file) {
 		super(file);
 		try {
-			register(1, new ParticleTaskDataListIO());
+			register(1, new ParticleTaskDataListIOv1());
 		} catch (NameAlreadyBoundException e) {
 			ParticleWorkshopPlugin.log
 					.info("A fatally stupid error has occured(flatfile IO ID conflict). Please contact author of the plugin...");

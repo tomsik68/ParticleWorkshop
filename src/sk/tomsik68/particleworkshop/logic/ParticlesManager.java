@@ -14,11 +14,9 @@ import sk.tomsik68.particleworkshop.files.impl.ParticleTasksDataFile;
 
 public class ParticlesManager {
 	private final HashMap<UUID, ParticleListsUUIDThread> tasksByWorld = new HashMap<>();
-
 	private ParticleListsUUIDThread dynamicPlayerTasks = new ParticleListsUUIDThread();
 
 	private final PlayerParticleNumberData ppnd = new PlayerParticleNumberData();
-
 	private ParticleTasksDataFile dataFile;
 
 	private BukkitScheduler scheduler;
@@ -98,5 +96,9 @@ public class ParticlesManager {
 			dynamicPlayerTasks.queueTask(task, data.getOwnerId());
 		}
 		return data.getNumber();
+	}
+
+	public void removeParticle(UUID player, int number) {
+		
 	}
 }

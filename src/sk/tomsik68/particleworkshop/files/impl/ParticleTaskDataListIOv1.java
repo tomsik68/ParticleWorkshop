@@ -13,7 +13,7 @@ import sk.tomsik68.particleworkshop.files.api.IDataIO;
 import sk.tomsik68.particleworkshop.logic.ParticleLocation;
 import sk.tomsik68.particleworkshop.logic.ParticleTaskData;
 
-public class ParticleTaskDataListIO implements IDataIO<List<ParticleTaskData>> {
+public class ParticleTaskDataListIOv1 implements IDataIO<List<ParticleTaskData>> {
 
 	@Override
 	public List<ParticleTaskData> load(InputStream in) throws Exception {

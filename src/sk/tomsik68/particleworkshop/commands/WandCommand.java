@@ -18,7 +18,6 @@ import sk.tomsik68.particleworkshop.ParticleWorkshopPlugin;
 import sk.tomsik68.particleworkshop.api.IParticlePlayer;
 import sk.tomsik68.particleworkshop.api.ParticlePlaySituations;
 import sk.tomsik68.particleworkshop.listeners.PWSWandUsageListener;
-import sk.tomsik68.particleworkshop.logic.ParticleOnBlockLocation;
 import sk.tomsik68.particleworkshop.logic.ParticleTaskDataBuilder;
 import sk.tomsik68.particleworkshop.logic.PlayerWandData;
 import sk.tomsik68.particleworkshop.players.ParticlePlayerRegistry;
@@ -31,7 +30,7 @@ public class WandCommand extends CommandHandler {
 		setPlayerOnly(true);
 		setPermission("pws.wand");
 		setDescription("(De)Activates your particle wand. Don't give any arguments to disable wand.");
-		setArgs("<effect> <name> [-r] [-d <data(number)>] [-s <situation>]");
+		setArgs("<effect> [-d <data(number)>] [-c <count>] [-s <situation>] [~X ~Y ~Z]");
 	}
 
 	@Override
@@ -63,10 +62,6 @@ public class WandCommand extends CommandHandler {
 				}
 				OptionParser parser = new OptionParser();
 
-				parser.acceptsAll(Arrays.asList("r", "repeat"),
-						"Plays the particle repeatedly");
-				parser.acceptsAll(Arrays.asList("f", "follow"),
-						"Keeps following the clicked entity");
 				parser.acceptsAll(Arrays.asList("s", "situation"),
 						"Plays particle only in special case")
 						.withRequiredArg().ofType(ParticlePlaySituations.class)
@@ -79,8 +74,6 @@ public class WandCommand extends CommandHandler {
 				String[] args2 = new String[args.length - 1];
 				System.arraycopy(args, 1, args2, 0, args.length - 1);
 				OptionSet options = parser.parse(args2);
-				boolean follow = options.has("f");
-				boolean repeat = options.has("r");
 
 				int relativeC = 0;
 				double[] relative = new double[] { 0, 0, 0 };
