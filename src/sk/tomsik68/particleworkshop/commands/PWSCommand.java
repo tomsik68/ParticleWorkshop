@@ -21,6 +21,7 @@ public class PWSCommand implements TabExecutor {
 	public PWSCommand(EPermissions perms) {
 		subCommands.put("wand", new WandCommand(perms));
 		subCommands.put("rm", new RemoveCommand(perms));
+		subCommands.put("ls", new ListCommand(perms));
 	}
 
 	@Override

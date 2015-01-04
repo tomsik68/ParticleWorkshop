@@ -3,6 +3,7 @@ package sk.tomsik68.particleworkshop.logic;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -67,6 +68,11 @@ public class ParticleOnBlockLocation extends StaticWorldLocation {
 
 	public void setZ(int z) {
 		this.z = z;
+	}
+
+	@Override
+	public String toString() {
+		return "[" + x + ";" + y + ";" + z + "]";
 	}
 
 }

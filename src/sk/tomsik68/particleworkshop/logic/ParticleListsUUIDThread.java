@@ -1,8 +1,6 @@
 package sk.tomsik68.particleworkshop.logic;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -28,9 +26,11 @@ class ParticleListsUUIDThread implements Runnable {
 		}
 	}
 
-	private final HashMap<UUID, List<PlayParticleTask>> tasksPerID = new HashMap<>();
-	private final HashSet<AddTaskData> tasksToAdd = new HashSet<AddTaskData>();
-	private final HashSet<RemoveTaskData> tasksToRemove = new HashSet<RemoveTaskData>();
+	// private final HashMap<UUID, List<PlayParticleTask>> tasksPerID = new
+	// HashMap<>();
+	private final UUIDToTaskListMap tasks = new UUIDToTaskListMap();
+	private final HashSet<AddTaskData> tasksToAdd = new HashSet<>();
+	private final HashSet<RemoveTaskData> tasksToRemove = new HashSet<>();
 
 	void queueTask(PlayParticleTask task, UUID id) {
 		synchronized (tasksToAdd) {
@@ -38,7 +38,7 @@ class ParticleListsUUIDThread implements Runnable {
 		}
 	}
 
-	void removeTask(UUID id, int taskNumber) {
+	private void removeTask(UUID id, int taskNumber) {
 		synchronized (tasksToRemove) {
 			tasksToRemove.add(new RemoveTaskData(id, taskNumber));
 		}
@@ -46,42 +46,30 @@ class ParticleListsUUIDThread implements Runnable {
 
 	@Override
 	public void run() {
-		Collection<List<PlayParticleTask>> lists = tasksPerID.values();
+		Collection<List<PlayParticleTask>> lists = tasks.getTaskLists();
 		for (List<PlayParticleTask> list : lists) {
 			for (PlayParticleTask task : list) {
 				task.run();
+				if (task.hasFinished())
+					removeTask(task.getOwner(), task.getTaskNumber());
 			}
 		}
 		synchronized (tasksToAdd) {
 			for (AddTaskData atd : tasksToAdd) {
-				List<PlayParticleTask> taskListForID = tasksPerID.get(atd.uuid);
-				if (taskListForID == null)
-					taskListForID = new ArrayList<>();
-				taskListForID.add(atd.task);
-				tasksPerID.put(atd.uuid, taskListForID);
+				tasks.addTask(atd.uuid, atd.task);
 			}
 			tasksToAdd.clear();
 		}
 		synchronized (tasksToRemove) {
 			for (RemoveTaskData data : tasksToRemove) {
-				List<PlayParticleTask> taskListForID = tasksPerID
-						.get(data.uuid);
-				if (taskListForID != null) {
-					for (int i = 0; i < taskListForID.size(); ++i) {
-						PlayParticleTask task = taskListForID.get(i);
-						if (task.getTaskNumber() == data.taskNumber) {
-							taskListForID.remove(i);
-							break;
-						}
-					}
-				}
+				tasks.removeTask(data.uuid, data.taskNumber);
 			}
 			tasksToRemove.clear();
 		}
 	}
 
 	public Collection<List<PlayParticleTask>> getLists() {
-		return tasksPerID.values();
+		return tasks.getTaskLists();
 	}
 
 }

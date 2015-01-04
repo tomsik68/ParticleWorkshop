@@ -47,7 +47,7 @@ class PlayParticleTask implements Runnable {
 			remove();
 	}
 
-	public void remove() {
+	void remove() {
 		finished = true;
 	}
 

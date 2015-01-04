@@ -3,18 +3,22 @@ package sk.tomsik68.particleworkshop.logic;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import sk.tomsik68.particleworkshop.ParticleWorkshopPlugin;
 import sk.tomsik68.particleworkshop.files.impl.ParticleTasksDataFile;
 
 public class ParticlesManager {
+	// each world has its thread
 	private final HashMap<UUID, ParticleListsUUIDThread> tasksByWorld = new HashMap<>();
-	private ParticleListsUUIDThread dynamicPlayerTasks = new ParticleListsUUIDThread();
+	private final ParticleListsUUIDThread dynamicPlayerTasks = new ParticleListsUUIDThread();
+	private final UUIDToTaskListMap tasksByPlayer = new UUIDToTaskListMap();
 
 	private final PlayerParticleNumberData ppnd = new PlayerParticleNumberData();
 	private ParticleTasksDataFile dataFile;
@@ -37,7 +41,7 @@ public class ParticlesManager {
 		List<ParticleTaskData> tasksData = dataFile.loadData();
 		for (ParticleTaskData taskData : tasksData) {
 			ppnd.updateParticleData(taskData.getOwnerId(), taskData.getNumber());
-			addParticle(taskData);
+			addParticle(taskData, false);
 		}
 	}
 
@@ -66,6 +70,17 @@ public class ParticlesManager {
 		dataFile.saveData(tasksData);
 	}
 
+	public List<ParticleTaskData> getDataOf(UUID player) {
+		List<ParticleTaskData> result = new ArrayList<>();
+		List<PlayParticleTask> tasks = tasksByPlayer.getTasksFor(player);
+		if (tasks != null)
+			for (PlayParticleTask task : tasks) {
+				result.add(task.getData());
+			}
+		return Collections.unmodifiableList(result);
+
+	}
+
 	public void scheduleTasks(BukkitScheduler scheduler) {
 		this.scheduler = scheduler;
 		for (ParticleListsUUIDThread thread : tasksByWorld.values()) {
@@ -75,12 +90,19 @@ public class ParticlesManager {
 	}
 
 	private void scheduleTask(ParticleListsUUIDThread thread) {
+		Validate.notNull(thread);
+		Validate.notNull(scheduler);
 		scheduler.runTaskTimer(ParticleWorkshopPlugin.getInstance(), thread,
 				88L, 4L);
 	}
 
 	public int addParticle(ParticleTaskData data) {
+		return addParticle(data, true);
+	}
+
+	private int addParticle(ParticleTaskData data, boolean schedule) {
 		PlayParticleTask task = ParticleTaskFactory.createTask(data);
+		tasksByPlayer.addTask(task.getOwner(), task);
 		if (data.getLocation() instanceof StaticWorldLocation) {
 			UUID worldId = ((StaticWorldLocation) data.getLocation())
 					.getWorld();
@@ -88,7 +110,8 @@ public class ParticlesManager {
 				if (!tasksByWorld.containsKey(worldId)) {
 					ParticleListsUUIDThread t = new ParticleListsUUIDThread();
 					tasksByWorld.put(worldId, t);
-					scheduleTask(t);
+					if (schedule)
+						scheduleTask(t);
 				}
 				tasksByWorld.get(worldId).queueTask(task, data.getOwnerId());
 			}
@@ -98,7 +121,7 @@ public class ParticlesManager {
 		return data.getNumber();
 	}
 
-	public void removeParticle(UUID player, int number) {
-		
+	public boolean removeParticle(UUID player, int number) {
+		return tasksByPlayer.removeTask(player, number);
 	}
 }

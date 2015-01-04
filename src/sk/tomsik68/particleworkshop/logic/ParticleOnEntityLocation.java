@@ -20,6 +20,7 @@ public class ParticleOnEntityLocation extends ParticleLocation {
 
 	private UUID entityId;
 	private Vector relVector;
+	private Entity theEntity;
 
 	public ParticleOnEntityLocation() {
 	}
@@ -47,20 +48,31 @@ public class ParticleOnEntityLocation extends ParticleLocation {
 	@Override
 	LocationIterator createIterator() {
 		List<World> worlds = Bukkit.getWorlds();
-		Entity theEntity = null;
-		for (World world : worlds) {
-			List<Entity> entities = world.getEntities();
-			for (Entity entity : entities) {
-				if (entity.getUniqueId().equals(entityId)) {
-					theEntity = entity;
-					break;
+		if (theEntity == null) {
+			for (World world : worlds) {
+				List<Entity> entities = world.getEntities();
+				for (Entity entity : entities) {
+					if (entity.getUniqueId().equals(entityId)) {
+						theEntity = entity;
+						break;
+					}
 				}
+				if (theEntity != null)
+					break;
 			}
-			if (theEntity != null)
-				break;
 		}
-
 		return new AlwaysOnEntity(theEntity, relVector);
 	}
 
+	@Override
+	public String toString() {
+		if (theEntity == null) {
+			return "[entity:" + entityId.toString() + "]";
+		} else {
+
+			return "[" + theEntity.getType().name() + ", location: "
+					+ theEntity.getLocation().toString() + "]";
+		}
+
+	}
 }

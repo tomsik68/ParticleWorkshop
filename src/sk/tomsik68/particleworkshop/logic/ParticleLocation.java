@@ -6,4 +6,6 @@ import sk.tomsik68.particleworkshop.api.LocationIterator;
 
 public abstract class ParticleLocation implements Externalizable {
 	abstract LocationIterator createIterator();
+
+	public abstract String toString();
 }
